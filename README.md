@@ -36,7 +36,9 @@
 From centos:7
 RUN yum install -y java-11-openjdk java-11-openjdk-devel wget
 ENV JAVA_HOME /etc/alternatives/jre
-RUN rpm --import https://artifacts.opensearch.org/publickeys/opensearch.pgp && wget https://artifacts.opensearch.org/releases/bundle/opensearch/2.4.0/opensearch-2.4.0-linux-x64.rpm && yum install -y opensearch-2.4.0-linux-x64.rpm && rm opensearch-2.4.0-linux-x64.rpm && rm -rf /var/cache/yum
+RUN rpm --import https://artifacts.opensearch.org/publickeys/opensearch.pgp && \ 
+wget https://artifacts.opensearch.org/releases/bundle/opensearch/2.4.0/opensearch-2.4.0-linux-x64.rpm \ 
+&& yum install -y opensearch-2.4.0-linux-x64.rpm && rm opensearch-2.4.0-linux-x64.rpm && rm -rf /var/cache/yum
 RUN chown -R 1000 /var/log/opensearch && chown -R 1000 /etc/opensearch && chown -R 1000 /var/lib/opensearch
 EXPOSE 9200
 CMD /usr/share/opensearch/bin/opensearch
