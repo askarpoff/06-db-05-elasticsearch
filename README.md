@@ -31,6 +31,30 @@
 
 Далее мы будем работать с данным экземпляром elasticsearch.
 
+### Ответ:
+
+```bash
+root@debian:/home/debian/elastic# curl -k -u admin:admin https://localhost:9200
+{
+  "name" : "netology_test",
+  "cluster_name" : "docker-cluster",
+  "cluster_uuid" : "0YA4igFuQtWUZbvDLVe-zg",
+  "version" : {
+    "distribution" : "opensearch",
+    "number" : "2.4.0",
+    "build_type" : "tar",
+    "build_hash" : "744ca260b892d119be8164f48d92b8810bd7801c",
+    "build_date" : "2022-11-15T04:42:29.671309257Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.4.1",
+    "minimum_wire_compatibility_version" : "7.10.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "The OpenSearch Project: https://opensearch.org/"
+}
+
+```
+
 ## Задача 2
 
 В этом задании вы научитесь:
