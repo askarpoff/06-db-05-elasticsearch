@@ -151,7 +151,7 @@ root@debian:/home/debian/elastic# curl -k -u admin:admin https://localhost:9200
   "tagline" : "The OpenSearch Project: https://opensearch.org/"
 }
 ```
-
+<a href='https://hub.docker.com/r/askarpoff/centos-7-opensearch'>https://hub.docker.com/r/askarpoff/centos-7-opensearch</a>
 ## Задача 2
 
 В этом задании вы научитесь:
