@@ -32,7 +32,7 @@
 Далее мы будем работать с данным экземпляром elasticsearch.
 
 ### Ответ:
-Сначала я сделал свой докерфайл, но так и не смог победить ошибку доступа по ssl, видимо нужно было utythbhjdfnm сертификаты и пр.
+Сначала я сделал свой докерфайл, но так и не смог победить ошибку доступа по ssl, видимо нужно было сгенерировать сертификаты и пр.
 ```dockerfile
 From centos:7
 RUN yum install -y java-11-openjdk java-11-openjdk-devel wget
@@ -44,7 +44,7 @@ RUN chown -R 1000 /var/log/opensearch && chown -R 1000 /etc/opensearch && chown 
 EXPOSE 9200
 CMD /usr/share/opensearch/bin/opensearch
 ```
-Так что потом я подсмотрел как делает разработчик.
+Так что потом я подсмотрел как делает разработчик
 ```dockerfile
 ########################### Stage 0 ########################
 FROM centos:7 AS linux_stage_0
@@ -181,6 +181,48 @@ root@debian:/home/debian/elastic# curl -k -u admin:admin https://localhost:9200
 При проектировании кластера elasticsearch нужно корректно рассчитывать количество реплик и шард,
 иначе возможна потеря данных индексов, вплоть до полной, при деградации системы.
 
+###Ответ:
+```bash
+root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/ind-1?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "settings": {
+>     "number_of_shards": 1,
+>     "number_of_replicas": 0
+>   }
+> }
+> '
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "ind-1"
+}
+root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/ind-2?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "settings": {
+>     "number_of_shards": 2,
+>     "number_of_replicas": 1
+>   }
+> }
+> '
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "ind-2"
+}
+root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/ind-3?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "settings": {
+>     "number_of_shards": 4,
+>     "number_of_replicas": 2
+>   }
+> }
+> '
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "ind-3"
+}
+```
 ## Задача 3
 
 В данном задании вы научитесь:
