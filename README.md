@@ -263,10 +263,7 @@ root@debian:/home/debian# curl -k -u admin:admin -X GET "https://localhost:9200/
 Часть индексов и кластер находится в состоянии yellow: создали индексы с репликами,а нода толька одна, некуда реплицировать, соответсвенно "желтый" статус.
 
 Удалите все индексы:
-Просто так не прокатывает, потому что в opensearch.yml
-```yaml
-action.destructive_requires_name: true
-```
+Просто так не прокатывает
 ```bash
 root@debian:/home/debian# curl -k -u admin:admin -X DELETE "https://localhost:9200/_all?pretty"
 {
@@ -364,9 +361,50 @@ drwxrwxr-x 5 opensearch opensearch 4096 Dec  5 08:38 indices
 ```
 Удалите индекс `test` и создайте индекс `test-2`
 ```
-
+root@debian:/home/debian# curl -k -u admin:admin -X GET "https://localhost:9200/_cat/indices?v"
+health status index                        uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2                       TBzD-CAISeOiSn__nZDANQ   1   0          0            0       208b           208b
+yellow open   security-auditlog-2022.12.05 z4x_X56MQnOJSvmLSPNclw   1   1          8            0    117.2kb        117.2kb
+green  open   .opendistro_security         B2vobB6xR1CmGMKPE6UhNw   1   0         10            0     71.7kb         71.7kb
 ```
 Запрос к API восстановления и итоговый список индексов
+(я так и не победил тотальные разрешения)
 ```
-
+root@debian:/etc# curl -k -u admin:admin -X POST "https://localhost:9200/_snapshot/netology_backup/snapshot_2022.12.05/_restore?pretty" -H 'Content-Type: application/json' -d'
+{
+  "indices": "*",
+  "include_global_state": false
+}
+'
+{
+  "error" : {
+    "root_cause" : [
+      {
+        "type" : "security_exception",
+        "reason" : "no permissions for [] and User [name=admin, backend_roles=[admin], requestedTenant=null]"
+      }
+    ],
+    "type" : "security_exception",
+    "reason" : "no permissions for [] and User [name=admin, backend_roles=[admin], requestedTenant=null]"
+  },
+  "status" : 403
+}
+```
+Восстановить только индексы test*
+```
+root@debian:/etc# curl -k -u admin:admin -X POST "https://localhost:9200/_snapshot/netology_backup/snapshot_2022.12.05/_restore?pretty" -H 'Content-Type: application/json' -d'
+{
+  "indices": "test*",
+  "include_global_state": false
+}
+'
+{
+  "accepted" : true
+}
+root@debian:/etc# curl -k -u admin:admin -X GET "https://localhost:9200/_cat/indices?v"
+health status index                        uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2                       TBzD-CAISeOiSn__nZDANQ   1   0          0            0       208b           208b
+yellow open   security-auditlog-2022.12.05 z4x_X56MQnOJSvmLSPNclw   1   1         30            0    125.5kb        125.5kb
+green  open   test                         OgQUyluKR_m_Y2Gdstm8zA   1   0          0            0       208b           208b
+green  open   .opendistro_security         B2vobB6xR1CmGMKPE6UhNw   1   0         10            0     71.7kb         71.7kb
 ```
