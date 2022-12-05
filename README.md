@@ -337,3 +337,36 @@ root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/
   "acknowledged" : true
 }
 ```
+Список индексов
+```bash
+root@debian:/home/debian# curl -k -u admin:admin -X GET "https://localhost:9200/_cat/indices?v"
+health status index                        uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   security-auditlog-2022.12.05 z4x_X56MQnOJSvmLSPNclw   1   1          4            0     60.9kb         60.9kb
+green  open   test                         RU321FhgQZKwqSXAVEvZ1Q   1   0          0            0       208b           208b
+green  open   .opendistro_security         B2vobB6xR1CmGMKPE6UhNw   1   0         10            0     71.7kb         71.7kb
+```
+Создайте snapshot
+```bash
+root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/_snapshot/netology_backup/%3Csnapshot_%7Bnow%2Fd%7D%3E?pretty"
+{
+  "accepted" : true
+}
+```
+Список файлов из директории со снапшотами:
+```bash
+[opensearch@737f8c6b30d4 snapshots]$ ll
+total 20
+-rw-rw-r-- 1 opensearch opensearch  952 Dec  5 08:38 index-0
+-rw-rw-r-- 1 opensearch opensearch    8 Dec  5 08:38 index.latest
+drwxrwxr-x 5 opensearch opensearch 4096 Dec  5 08:38 indices
+-rw-rw-r-- 1 opensearch opensearch  371 Dec  5 08:38 meta-IG6aun0FSvWB8RFevetRwA.dat
+-rw-rw-r-- 1 opensearch opensearch  326 Dec  5 08:38 snap-IG6aun0FSvWB8RFevetRwA.dat
+```
+Удалите индекс `test` и создайте индекс `test-2`
+```
+
+```
+Запрос к API восстановления и итоговый список индексов
+```
+
+```
