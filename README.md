@@ -181,7 +181,7 @@ root@debian:/home/debian/elastic# curl -k -u admin:admin https://localhost:9200
 При проектировании кластера elasticsearch нужно корректно рассчитывать количество реплик и шард,
 иначе возможна потеря данных индексов, вплоть до полной, при деградации системы.
 
-###Ответ:
+### Ответ:
 ```bash
 root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/ind-1?pretty" -H 'Content-Type: application/json' -d'
 > {
@@ -222,6 +222,16 @@ root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/
   "shards_acknowledged" : true,
   "index" : "ind-3"
 }
+```
+Список индексов и их статусов
+```bash
+root@debian:/home/debian# curl -k -u admin:admin -X GET "https://localhost:9200/_cat/indices?v"
+health status index                        uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   security-auditlog-2022.12.04 lZTIkkfeQIaQ7Nd615G_7Q   1   1         18            0    160.3kb        160.3kb
+green  open   ind-1                        S5w-jl1jSuGVc4Xl5PPVbw   1   0          0            0       208b           208b
+green  open   .opendistro_security         01ppSzVsQrSa-YtIKmZyrw   1   0         10            0     71.7kb         71.7kb
+yellow open   ind-3                        N-TddOwVS7uliqsi0hPKQw   4   2          0            0       832b           832b
+yellow open   ind-2                        bwe6cBDLRFOYdZhfob08kA   2   1          0            0       416b           416b
 ```
 
 Состояние кластера
