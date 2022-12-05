@@ -223,6 +223,31 @@ root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/
   "index" : "ind-3"
 }
 ```
+
+Состояние кластера
+```bash
+root@debian:/home/debian# curl -k -u admin:admin -X GET "https://localhost:9200/_cluster/health?pretty"
+{
+  "cluster_name" : "opensearch-cluster",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "discovered_master" : true,
+  "discovered_cluster_manager" : true,
+  "active_primary_shards" : 9,
+  "active_shards" : 9,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 11,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 45.0
+}
+```
+
 ## Задача 3
 
 В данном задании вы научитесь:
