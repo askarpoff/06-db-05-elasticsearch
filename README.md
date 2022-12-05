@@ -283,6 +283,13 @@ root@debian:/home/debian# curl -k -u admin:admin -X DELETE "https://localhost:92
   "status" : 403
 }
 ```
+Так что по-одному - типа  
+```bash
+curl -k -u admin:admin -X DELETE "https://localhost:9200/ind-1?pretty"
+{
+  "acknowledged" : true
+}
+```
 ## Задача 3
 
 В данном задании вы научитесь:
@@ -312,3 +319,21 @@ root@debian:/home/debian# curl -k -u admin:admin -X DELETE "https://localhost:92
 
 Подсказки:
 - возможно вам понадобится доработать `elasticsearch.yml` в части директивы `path.repo` и перезапустить `elasticsearch`
+
+### Ответ:
+Запрос API и результат вызова API для создания репозитория.
+
+Добавил - path.repo=/usr/share/opensearch/snapshots
+```bash
+root@debian:/home/debian# curl -k -u admin:admin -X PUT "https://localhost:9200/_snapshot/netology_backup?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "type": "fs",
+>   "settings": {
+>     "location": "/usr/share/opensearch/snapshots"
+>   }
+> }
+> '
+{
+  "acknowledged" : true
+}
+```
