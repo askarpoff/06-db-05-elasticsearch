@@ -287,7 +287,7 @@ curl -k -u admin:admin -X DELETE "https://localhost:9200/ind-1?pretty"
   "acknowledged" : true
 }
 ```
-*UPD*
+**UPD**
 Нужно авторизоваться через сертификаты:
 ```bash
 root@debian:/home/debian/opensearch# curl -X DELETE "https://localhost:9200/_all?pretty" -k --cert /home/debian/opensearch/config/kirk.pem --key /home/debian/opensearch/config/kirk-key.pem                                                 {
