@@ -287,6 +287,13 @@ curl -k -u admin:admin -X DELETE "https://localhost:9200/ind-1?pretty"
   "acknowledged" : true
 }
 ```
+*UPD*
+Нужно авторизоваться через сертификаты:
+```bash
+root@debian:/home/debian/opensearch# curl -X DELETE "https://localhost:9200/_all?pretty" -k --cert /home/debian/opensearch/config/kirk.pem --key /home/debian/opensearch/config/kirk-key.pem                                                 {
+  "acknowledged" : true
+}
+```
 ## Задача 3
 
 В данном задании вы научитесь:
@@ -368,43 +375,22 @@ yellow open   security-auditlog-2022.12.05 z4x_X56MQnOJSvmLSPNclw   1   1       
 green  open   .opendistro_security         B2vobB6xR1CmGMKPE6UhNw   1   0         10            0     71.7kb         71.7kb
 ```
 Запрос к API восстановления и итоговый список индексов
-(я так и не победил тотальные разрешения)
 ```
-root@debian:/etc# curl -k -u admin:admin -X POST "https://localhost:9200/_snapshot/netology_backup/snapshot_2022.12.05/_restore?pretty" -H 'Content-Type: application/json' -d'
-{
-  "indices": "*",
-  "include_global_state": false
+root@debian:/home/debian/opensearch# curl -X DELETE "https://localhost:9200/_all?pretty" -k --cert /home/debian/opensearch/config/kirk.pem --key /home/debian/opensearch/config/kirk-key.pem                                                 {
+  "acknowledged" : true
 }
-'
-{
-  "error" : {
-    "root_cause" : [
-      {
-        "type" : "security_exception",
-        "reason" : "no permissions for [] and User [name=admin, backend_roles=[admin], requestedTenant=null]"
-      }
-    ],
-    "type" : "security_exception",
-    "reason" : "no permissions for [] and User [name=admin, backend_roles=[admin], requestedTenant=null]"
-  },
-  "status" : 403
-}
-```
-Восстановить только индексы test*
-```
-root@debian:/etc# curl -k -u admin:admin -X POST "https://localhost:9200/_snapshot/netology_backup/snapshot_2022.12.05/_restore?pretty" -H 'Content-Type: application/json' -d'
-{
-  "indices": "test*",
-  "include_global_state": false
-}
-'
+root@debian:/home/debian/opensearch# curl -X POST "https://localhost:9200/_snapshot/netology_backup/snapshot_2022.12.05/_restore?pretty" -H 'Content-Type: application/json' -d'
+> {
+>   "indices": "*",
+>   "include_global_state": false
+> }' -k --cert /home/debian/opensearch/config/kirk.pem --key /home/debian/opensearch/config/kirk-key.pem
 {
   "accepted" : true
 }
-root@debian:/etc# curl -k -u admin:admin -X GET "https://localhost:9200/_cat/indices?v"
+root@debian:/home/debian/opensearch#  curl -k -u admin:admin -X GET "https://localhost:9200/_cat/indices?v"
 health status index                        uuid                   pri rep docs.count docs.deleted store.size pri.store.size
-green  open   test-2                       TBzD-CAISeOiSn__nZDANQ   1   0          0            0       208b           208b
-yellow open   security-auditlog-2022.12.05 z4x_X56MQnOJSvmLSPNclw   1   1         30            0    125.5kb        125.5kb
-green  open   test                         OgQUyluKR_m_Y2Gdstm8zA   1   0          0            0       208b           208b
-green  open   .opendistro_security         B2vobB6xR1CmGMKPE6UhNw   1   0         10            0     71.7kb         71.7kb
+yellow open   security-auditlog-2022.12.05 Hhd-4j3WSdWySwr4jYVWKQ   1   1          6            0     86.5kb         86.5kb
+green  open   test                         VaVpyJNpQ5WJva9ZM1t1BQ   1   0          0            0       208b           208b
+green  open   .opendistro_security         jy1TGw90T_aTY3Tdp9UfWw   1   0         10            0     71.7kb         71.7kb
+
 ```
